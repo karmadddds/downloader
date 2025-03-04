@@ -12,6 +12,10 @@ api_hash = '5b391bbd20571c5c8306d40489d6c59d'  # Ganti dengan API Hash Anda
 source_channel_link = "https://t.me/+w63KcyBe9LxjYzM1"  # Ganti dengan link channel sumber
 target_channel_link = "https://t.me/+TOePF2vz7kM1M2E5"  # Ganti dengan link channel tujuan
 
+# ✅ Rentang pesan yang akan diteruskan
+start_message_id = 58657
+end_message_id = 58850
+
 async def forward_media(client, source, target):
     tasks = []
     album = []
@@ -19,8 +23,8 @@ async def forward_media(client, source, target):
     start_time = time.time()
     last_grouped_id = None
     
-    async for message in client.iter_messages(source):
-        if message.media:
+    async for message in client.iter_messages(source, min_id=start_message_id - 1, max_id=end_message_id + 1, reverse=True):
+        if message.photo or message.video:  # Hanya foto dan video
             if message.grouped_id:
                 if last_grouped_id is None or message.grouped_id == last_grouped_id:
                     album.append(message)
