@@ -25,24 +25,27 @@ async def forward_media(client, source, target):
                 if last_grouped_id is None or message.grouped_id == last_grouped_id:
                     album.append(message)
                 else:
-                    tasks.append(client.send_file(target, [m.media for m in album], caption=album[0].text or ""))
-                    total_media += len(album)
+                    # Kirim album sebelumnya sebelum memulai album baru
+                    if album:
+                        tasks.append(client.send_file(target, [m.media for m in album], caption=album[0].text or ""))
+                        total_media += len(album)
                     album = [message]
                 last_grouped_id = message.grouped_id
             else:
+                # Kirim album jika ada sebelum mengirim media tunggal
                 if album:
                     tasks.append(client.send_file(target, [m.media for m in album], caption=album[0].text or ""))
                     total_media += len(album)
                     album = []
-                tasks.append(client.send_message(target, file=message.media, caption=message.text or ""))
+                tasks.append(client.send_file(target, message.media, caption=message.text or ""))
                 total_media += 1
             
-            # Jika sudah mencapai batch 50, kirim semua dulu
-            if len(tasks) >= 50:
+            # Kirim batch hanya jika album sudah lengkap
+            if last_grouped_id is None and len(tasks) >= 50:
                 await asyncio.gather(*tasks)
                 tasks = []
     
-    # Kirim sisa batch terakhir
+    # Kirim sisa album terakhir jika ada
     if album:
         tasks.append(client.send_file(target, [m.media for m in album], caption=album[0].text or ""))
         total_media += len(album)
