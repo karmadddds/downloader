@@ -10,7 +10,7 @@ api_hash = '5b391bbd20571c5c8306d40489d6c59d'  # Ganti dengan API Hash Anda
 
 # ✅ Source dan target channel
 source_channel_link = "https://t.me/+w63KcyBe9LxjYzM1"  # Ganti dengan link channel sumber
-target_channel_link = "https://t.me/+3uni_szsI9I5Zjdk"  # Ganti dengan link channel tujuan
+target_channel_link = "https://t.me/+TOePF2vz7kM1M2E5"  # Ganti dengan link channel tujuan
 
 async def forward_media(client, source, target):
     tasks = []
